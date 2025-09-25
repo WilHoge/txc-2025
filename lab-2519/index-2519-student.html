@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+  <title>Environment Credentials for lab 2519</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 2rem auto;
+      max-width: 620px;
+      line-height: 1.5;
+      padding: 0 1rem;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .card {
+      border: 1px solid var(--border, #ccc);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    label { display: block; margin-top: 0.75rem; font-weight: 600; }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.6rem 0.7rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      margin-top: 0.35rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 0.9rem;
+      border: 0;
+      border-radius: 8px;
+      background: #0a66c2;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #e0e0e0;
+      color: #111;
+      margin-left: 0.4rem;
+    }
+    .result p { margin: 0.4rem 0; }
+    code {
+      background: rgba(127,127,127,.15);
+      padding: 0.1rem 0.35rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .muted { color: #666; font-size: 0.95rem; }
+    #envNumber {
+      width: 80px; /* or any size you like */
+    }
+  </style>
+</head>
+<body>
+  <h1>Environment Credentials</h1>
+  <p class="muted">Enter your environment number (0–29) to view credentials.</p>
+
+  <div class="card">
+ 
+    <label for="envNumber">Environment number</label>
+    <input type="number" id="envNumber" placeholder="0–29" min="0" max="29" step="1" />
+
+    <button id="showBtn" type="button">Show Credentials</button>
+    <button id="clearBtn" type="button" class="secondary">Clear</button>
+
+    <div id="result" class="result" style="display:none; margin-top:1rem;"></div>
+  </div>
+
+  <p class="muted" style="margin-top:1rem;">
+    <strong>Note:</strong> The username is a concatenation of <em>student</em> and the <em>environment number</em>.
+  </p>
+
+  <script>
+    // List of passwords for environments 0..29 (edit to your real values)
+    // passwords[i] === password for student{i}
+const passwords = [
+  "jhKXB2rwbJaset3A", // student0
+  "NTpqHp9QITliPQ6W", // student1
+  "lqrqzQkZBXXSc#Jm", // student2
+  "DoiXNIJIulEBrH9I", // student3
+  "HCiuMYQCM!GdGrp#", // student4
+  "6VnCT89JYNYX5bLn", // student5
+  "P!7X2WOw2mQMpcpW", // student6
+  "d4oDAfjbg0yJVf1i", // student7
+  "tmCzr#qRII-GEk-!", // student8
+  "Oc#ONpk7FvSAxYcN", // student9
+  "q70mCO4tkfGhJiE!", // student10
+  "R3r0tDsFcSMHuAi6", // student11
+  "pmjEshVyA0yDRLZD", // student12
+  "wGPhVL2!e4Pwtjbc", // student13
+  "zKFXEVoEClnEpfjp", // student14
+  "C2CWIySYj-RFmW9u", // student15
+  "yjRfc0hsKHd48P7l", // student16
+  "jTejX1f4KsQgk!o8", // student17
+  "qgIl4iHird#A2uBY", // student18
+  "BLGyLy9wmNfpaBOs", // student19
+  "4s2PUa3sJ2Kr8rUG", // student20
+  "K9#NrN1f-gt6OUWf", // student21
+  "6mwCnE05AsxSdOyG", // student22
+  "DUoLaCeR4#Db4ibJ", // student23
+  "fJCJxbYzPj7pA0FD", // student24
+  "J#ny3R8#M3mXGZFO", // student25
+  "i4SrRyTu61B1HBv3", // student26
+  "SldJ4ge#bGLg!muM", // student27
+  "7zNZbRopeGhjs4HJ", // student28
+  "qTQYcrsqyVfy!P!F"  // student29
+];
+
+
+    const envNumberEl = document.getElementById("envNumber");
+    const resultEl = document.getElementById("result");
+    const showBtn = document.getElementById("showBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    function isValidEnv(n) {
+      return Number.isInteger(n) && n >= 0 && n <= 29;
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      } else {
+        // Fallback for non-secure contexts
+        const tmp = document.createElement("textarea");
+        tmp.value = text;
+        document.body.appendChild(tmp);
+        tmp.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(tmp);
+      }
+    }
+
+    function showCredentials() {
+      const envRaw = envNumberEl.value.trim();
+      const env = Number(envRaw);
+
+    studentId = "student"
+    if (!envRaw || !isValidEnv(env)) {
+        alert("Please enter a valid environment number between 0 and 29.");
+        envNumberEl.focus();
+        return;
+      }
+
+      const password = passwords[env];
+      const username = `${studentId}${env}`;
+
+      resultEl.style.display = "block";
+      resultEl.innerHTML = `
+        <p><strong>Environment:</strong> <code>${env}</code></p>
+        <p><strong>User:</strong> <code id="userVal">${username}</code>
+          <button type="button" class="secondary" onclick="copyText('${username.replace(/'/g, "\\'")}')">Copy</button>
+        </p>
+        <p><strong>Password:</strong> <code id="passVal">${password}</code>
+          <button type="button" class="secondary" onclick="copyText('${password.replace(/'/g, "\\'")}')">Copy</button>
+        </p>
+        <a href="https://cloud.ibm.com/authorize/81d1b9c927d945e081f4262c27c1bf0a" target="_blank">Access IBM Cloud</a>
+      `;
+    }
+
+    function clearForm() {
+      envNumberEl.value = "";
+      resultEl.style.display = "none";
+      resultEl.innerHTML = "";
+      resultEl.focus();
+    }
+
+    showBtn.addEventListener("click", showCredentials);
+    clearBtn.addEventListener("click", clearForm);
+
+  </script>
+</body>
+</html>
