@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Selector</title>
+</head>
+<body>
+    <h1>What is your environment number?</h1>
+    <input type="number" id="envNumber" placeholder="Enter environment number">
+    <button onclick="goToPage()">Go</button>
+
+    <script>
+        function goToPage() {
+            const envNumber = document.getElementById('envNumber').value.trim();
+            if (envNumber) {
+                window.location.href = envNumber + ".html";
+            } else {
+                alert("Please enter a valid environment number.");
+            }
+        }
+    </script>
+</body>
+</html>
